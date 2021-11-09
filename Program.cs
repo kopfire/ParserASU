@@ -68,10 +68,9 @@ namespace ParserASU
                                     {
                                         Console.WriteLine(u);
                                         form = new MultipartFormDataContent();
-                                        HttpResponseMessage responseTimeTable = await httpClient.PostAsync("https://raspisanie.asu.edu.ru/student/schedule/" + u, form);
+                                        HttpResponseMessage responseTimeTable = await httpClient.PostAsync("http://m.raspisanie.asu.edu.ru/student/" + u, form);
                                         var responseContentTimeTable = await responseTimeTable.Content.ReadAsStringAsync();
                                         responseContentTimeTable = Regex.Replace(responseContentTimeTable, @"\\u([\da-f]{4})", m => ((char)Convert.ToInt32(m.Groups[1].Value, 16)).ToString());
-                                        Console.WriteLine(responseContentTimeTable);
                                         List<string> hrefTags = new List<string>();
 
                                         var parser = new HtmlParser();
@@ -81,7 +80,15 @@ namespace ParserASU
 
                                         foreach (var e in els)
                                         {
-                                            Console.WriteLine(e.Text());
+                                            Console.WriteLine(e.InnerHtml);
+                                            Console.WriteLine(22);
+                                            var elsDen = e.QuerySelectorAll("div.dennedeli");
+
+                                            foreach (var ee in elsDen)
+                                            {
+                                                Console.WriteLine(ee.InnerHtml);
+
+                                            }
                                         }
                                     }                                    
                                 }
@@ -92,7 +99,6 @@ namespace ParserASU
                                     HttpResponseMessage responseTimeTable = await httpClient.PostAsync("http://m.raspisanie.asu.edu.ru/student/" + u, form);
                                     var responseContentTimeTable = await responseTimeTable.Content.ReadAsStringAsync();
                                     responseContentTimeTable = Regex.Replace(responseContentTimeTable, @"\\u([\da-f]{4})", m => ((char)Convert.ToInt32(m.Groups[1].Value, 16)).ToString());
-                                    Console.WriteLine(responseContentTimeTable);
                                     List<string> hrefTags = new List<string>();
 
                                     var parser = new HtmlParser();
@@ -104,18 +110,20 @@ namespace ParserASU
                                     {
                                         Console.WriteLine(e.InnerHtml);
                                         Console.WriteLine(22);
+                                        var elsDen = e.QuerySelectorAll("div.dennedeli");
+
+                                        foreach (var ee in elsDen)
+                                        {
+                                            Console.WriteLine(ee.InnerHtml);
+
+                                        }
                                     }
                                 }
-                                
                             }
-
-
                         }
                     }
-                    }
+                }
             }
-
         }
-
     }
 }
