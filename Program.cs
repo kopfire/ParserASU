@@ -103,19 +103,27 @@ namespace ParserASU
 
                                     var parser = new HtmlParser();
                                     var document = parser.ParseDocument(responseContentTimeTable);
-                                    Console.WriteLine(1111111111111111);
                                     var els = document.QuerySelectorAll("div.vot_den");
 
                                     foreach (var e in els)
                                     {
                                         Console.WriteLine(e.InnerHtml);
-                                        Console.WriteLine(22);
                                         var elsDen = e.QuerySelectorAll("div.dennedeli");
-
+                                        
                                         foreach (var ee in elsDen)
                                         {
                                             Console.WriteLine(ee.InnerHtml);
 
+                                        }
+                                        var elsDay = e.QuerySelectorAll("div.den-content");
+                                        foreach (var ee in elsDay)
+                                        {
+                                            Console.WriteLine(ee.InnerHtml);
+                                            var elsPara = ee.QuerySelectorAll("div.npara");
+                                            foreach (var eee in elsPara)
+                                            {
+                                                Console.WriteLine(ee.InnerHtml);
+                                            }
                                         }
                                     }
                                 }
