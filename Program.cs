@@ -1,19 +1,11 @@
 ﻿
 using System;
-using System.Text;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Text.Json;
-using System.Collections;
-using System.Net;
-using Newtonsoft.Json.Linq;
-using HtmlAgilityPack;
-using System.Net.Http.Headers;
-using System.Linq;
 using System.Text.RegularExpressions;
 using AngleSharp.Html.Parser;
-using AngleSharp.Dom;
 using ParserASU.Models;
 
 namespace ParserASU
@@ -60,7 +52,14 @@ namespace ParserASU
                 foreach (MyItem j in speciality.q)
                 {
                     Console.WriteLine(j.id + " " + j.name);
-                    var idS = await SpecialitiesDB.Create(new Specialties { Name = j.name.Replace(",", ""), Facylty = idF });
+                    var spec = j.name.Substring(0, 8) + " " + j.name.Substring(j.name.LastIndexOf("(")+1, 3);
+                    if (j.name.IndexOf("\"") != -1)
+                    {
+                        spec += " " + j.name[(j.name.IndexOf("\"")+1)..j.name.LastIndexOf("\"")].Replace(",", "");
+                    }
+                    Console.WriteLine(spec);
+
+                    var idS = await SpecialitiesDB.Create(new Specialties { Name = spec, Facylty = idF });
                     form = new MultipartFormDataContent();
                     form.Add(new StringContent(j.id), "val_spec");
                     HttpResponseMessage responseKurs = await httpClient.PostAsync("http://m.raspisanie.asu.edu.ru//student/kurs", form);
@@ -146,7 +145,6 @@ namespace ParserASU
                                                     Number = para
                                                 });
                                             }
-                                            Console.WriteLine(lesCh.Count);
                                         }
                                       
                                         if (lesCh.Count != 0)
