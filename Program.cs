@@ -146,6 +146,7 @@ namespace ParserASU
                                                     Number = para
                                                 });
                                             }
+                                            Console.WriteLine(lesCh.Count);
                                         }
                                       
                                         if (lesCh.Count != 0)
