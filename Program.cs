@@ -41,23 +41,19 @@ namespace ParserASU
             var timeTable = JsonSerializer.Deserialize<Facul>("{\"q\":"+ resultContent + "}");
             foreach (MyItem i in timeTable.q)
             {
-                Console.WriteLine(i.id + " " + i.name);
                 var idF = await FacultiesDB.Create(new Faculties { Name = i.name.Replace(",", ""), University = "617477bee3592a8c4fe4458f" });
                 MultipartFormDataContent form = new MultipartFormDataContent();
                 form.Add(new StringContent(i.id), "id_spec");
                 HttpResponseMessage response = await httpClient.PostAsync("http://m.raspisanie.asu.edu.ru//student/specialty", form);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var speciality = JsonSerializer.Deserialize<Facul>("{\"q\":" + responseContent + "}");
-                Console.WriteLine("Специальности");
                 foreach (MyItem j in speciality.q)
                 {
-                    Console.WriteLine(j.id + " " + j.name);
                     var spec = j.name.Substring(0, 8) + " " + j.name.Substring(j.name.LastIndexOf("(")+1, 3);
                     if (j.name.IndexOf("\"") != -1)
                     {
                         spec += " " + j.name[(j.name.IndexOf("\"")+1)..j.name.LastIndexOf("\"")].Replace(",", "");
                     }
-                    Console.WriteLine(spec);
 
                     var idS = await SpecialitiesDB.Create(new Specialties { Name = spec, Facylty = idF });
                     form = new MultipartFormDataContent();
@@ -65,11 +61,9 @@ namespace ParserASU
                     HttpResponseMessage responseKurs = await httpClient.PostAsync("http://m.raspisanie.asu.edu.ru//student/kurs", form);
                     var responseContentKurs = await responseKurs.Content.ReadAsStringAsync();
                     var kurs = JsonSerializer.Deserialize<Facul>("{\"s\":" + responseContentKurs + "}");
-                    Console.WriteLine("Курсы");
                     foreach (Kurs z in kurs.s)
                     {
 
-                        Console.WriteLine(z.kurs);
                         form = new MultipartFormDataContent();
                         form.Add(new StringContent(j.id), "val_spec");
                         form.Add(new StringContent(z.kurs), "kurs");
@@ -85,7 +79,6 @@ namespace ParserASU
                             {
                                 if (arrGroup.Length%3 != 0 || u.Length == 6)
                                 {
-                                    Console.WriteLine(u);
                                     var weeks = new List<Helpers.JSON.Week>();
                                     form = new MultipartFormDataContent();
                                     HttpResponseMessage responseTimeTable = await httpClient.PostAsync("http://m.raspisanie.asu.edu.ru/student/" + u, form);
